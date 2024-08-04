@@ -1,26 +1,86 @@
-import React, { useState } from 'react';
-import './Envelope.css';
+.envelope-container {
+  width: 300px;
+  height: 200px;
+  perspective: 1000px;
+  margin: 50px auto;
+  cursor: pointer;
+}
 
-const Envelope = () => {
-  const [isOpen, setIsOpen] = useState(false);
+.envelope {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+}
 
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
+.envelope-container.open .envelope {
+  transform: rotateX(180deg);
+}
 
-  return (
-    <div className={`envelope-container ${isOpen ? 'open' : ''}`} onClick={handleClick}>
-      <div className="envelope">
-        <div className="front">
-          <div className="flap"></div>
-        </div>
-        <div className="back"></div>
-        <div className="letter">
-          <p>I love you</p>
-        </div>
-      </div>
-    </div>
-  );
-};
+.front, .back, .flap, .letter {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
 
-export default Envelope;
+.front {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  z-index: 2;
+}
+
+.back {
+  background: #fad0c4;
+  transform: rotateX(180deg);
+}
+
+.flap {
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(135deg, #fad0c4 0%, #ff9a9e 100%);
+  transform-origin: top;
+  transition: transform 0.5s 0.5s;
+}
+
+.envelope-container.open .flap {
+  transform: rotateX(180deg);
+}
+
+.letter {
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Brush Script MT', cursive;
+  font-size: 36px;
+  color: #ff6b6b;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transform: translateZ(1px) scale(0.9);
+  opacity: 0;
+  transition: opacity 0.5s 0.5s, transform 0.5s 0.5s;
+}
+
+.envelope-container.open .letter {
+  opacity: 1;
+  transform: translateZ(1px) scale(1);
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.envelope-container.open .letter p {
+  animation: heartbeat 1s infinite;
+}
